@@ -1,103 +1,100 @@
-import Image from "next/image";
+'use client'
+
+import { useState } from 'react'
+
+const TAGS = [
+  { label: 'Heater', value: 'heater' },
+  { label: 'Low Profile', value: 'low-profile' },
+  { label: 'Sporty', value: 'sporty' },
+]
+
+const DUMMY_SNEAKERS = [
+  {
+    id: 1,
+    name: 'Jordan 4 White Oreo',
+    image: 'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,q_auto:eco/6b2e2e2e-2e2e-4e2e-8e2e-2e2e2e2e2e2e/air-jordan-4-retro-white-oreo.png',
+    tags: ['Heater'],
+  },
+  {
+    id: 2,
+    name: 'New Balance 990',
+    image: 'https://nb.scene7.com/is/image/NB/m990gl5_nb_02_i?$pdpflexf2$',
+    tags: ['Bleate'],
+  },
+  {
+    id: 3,
+    name: 'Nike Dunk Low Pale Ivory',
+    image: 'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,q_auto:eco/1b2e2e2e-2e2e-4e2e-8e2e-2e2e2e2e2e2e/dunk-low-pale-ivory.png',
+    tags: ['Low-Profile'],
+  },
+  {
+    id: 4,
+    name: 'Nike Dunk Low Syracuse',
+    image: 'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,q_auto:eco/2b2e2e2e-2e2e-4e2e-8e2e-2e2e2e2e2e2e/dunk-low-syracuse.png',
+    tags: ['Shorts', 'Low-Profile'],
+  },
+]
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [activeTag, setActiveTag] = useState<string | null>(null)
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const handleTagClick = (tag: string) => {
+    setActiveTag(tag)
+    console.log('Tag clicked:', tag)
+  }
+
+  return (
+    <div className="flex flex-col gap-8">
+      <header className="mb-4">
+        <h1 className="text-4xl font-bold mb-2">Welcome Back</h1>
+        <p className="text-gray-600">Track your sneaker collection with ease.</p>
+      </header>
+
+      <section className="mb-6">
+        <h2 className="text-lg font-semibold mb-2">Explore</h2>
+        <div className="flex gap-2">
+          {TAGS.map((tag) => (
+            <button
+              key={tag.value}
+              onClick={() => handleTagClick(tag.value)}
+              className={`px-4 py-1 rounded-full border text-sm transition-colors ${
+                activeTag === tag.value
+                  ? 'bg-black text-white border-black'
+                  : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200'
+              }`}
+            >
+              {tag.label}
+            </button>
+          ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold mb-2">Recently Added</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {DUMMY_SNEAKERS.map((sneaker) => (
+            <div key={sneaker.id} className="bg-white rounded-lg shadow p-4 flex flex-col items-center">
+              <img
+                src={sneaker.image}
+                alt={sneaker.name}
+                className="w-32 h-24 object-contain mb-2"
+                style={{ background: '#f3f3f3' }}
+              />
+              <div className="font-semibold mb-1 text-center">{sneaker.name}</div>
+              <div className="flex flex-wrap gap-1 justify-center">
+                {sneaker.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="bg-gray-200 text-xs px-2 py-0.5 rounded-full text-gray-700"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
-  );
+  )
 }
