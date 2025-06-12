@@ -9,12 +9,12 @@ interface Sneaker {
   id: string
   name: string
   image: string
-  tags: string[]
   score: number
   user_id: string
   in_rotation: boolean
   brand: string
   model: string
+  tag: string
 }
 
 export default function SneakerDetailPage() {
@@ -44,7 +44,7 @@ export default function SneakerDetailPage() {
         setSneaker({
           ...data,
           image: data.image || 'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,q_auto:eco/6b2e2e2e-2e2e-4e2e-8e2e-2e2e2e2e2e2e/air-jordan-4-retro-white-oreo.png',
-          tags: data.tags || ['Heater'],
+          tag: data.tag || 'Heater',
           score: data.score || 4,
           brand: data.brand || 'Unknown Brand',
           model: data.model || 'Unknown Model',
@@ -72,7 +72,7 @@ export default function SneakerDetailPage() {
       <SneakerCard
         name={sneaker.brand + ' ' + sneaker.model}
         image={sneaker.image}
-        tags={sneaker.tags}
+        tags={[sneaker.tag]}
         score={sneaker.score}
       />
       <div className="mt-6 text-center">

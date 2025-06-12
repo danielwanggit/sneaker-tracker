@@ -14,25 +14,25 @@ const DUMMY_SNEAKERS = [
     id: 1,
     name: 'Jordan 4 White Oreo',
     image: 'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,q_auto:eco/6b2e2e2e-2e2e-4e2e-8e2e-2e2e2e2e2e2e/air-jordan-4-retro-white-oreo.png',
-    tags: ['Heater'],
+    tag: 'heater',
   },
   {
     id: 2,
     name: 'New Balance 990',
     image: 'https://nb.scene7.com/is/image/NB/m990gl5_nb_02_i?$pdpflexf2$',
-    tags: ['Bleate'],
+    tag: 'Bleate',
   },
   {
     id: 3,
     name: 'Nike Dunk Low Pale Ivory',
     image: 'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,q_auto:eco/1b2e2e2e-2e2e-4e2e-8e2e-2e2e2e2e2e2e/dunk-low-pale-ivory.png',
-    tags: ['Low-Profile'],
+    tag: 'Low-Profile',
   },
   {
     id: 4,
     name: 'Nike Dunk Low Syracuse',
     image: 'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,q_auto:eco/2b2e2e2e-2e2e-4e2e-8e2e-2e2e2e2e2e2e/dunk-low-syracuse.png',
-    tags: ['Shorts', 'Low-Profile'],
+    tag: 'Shorts',
   },
 ]
 
@@ -48,7 +48,7 @@ export default function Home() {
     <div className="flex flex-col gap-8">
       <header className="mb-4">
         <h1 className="text-4xl font-bold mb-2">Welcome Back</h1>
-        <p className="text-gray-600">Track your sneaker collection with ease.</p>
+        <p className="text-gray-600">Track your sneaker collection</p>
       </header>
 
       <section className="mb-6">
@@ -78,7 +78,7 @@ export default function Home() {
               key={sneaker.id}
               name={sneaker.name}
               image={sneaker.image}
-              tags={sneaker.tags}
+              tags={[sneaker.tag]}
               score={(i % 5) + 1} // mock star rating
             />
           ))}

@@ -6,20 +6,17 @@ import { useSupabase } from '@/components/providers/SupabaseProvider'
 import SneakerCard from '@/components/SneakerCard'
 import Link from 'next/link'
 import { addSneaker } from '@/services/addSneaker'
-import FilterBar from '@/components/FilterBar'
 
 interface Sneaker {
   id: string
   name: string
   image: string
-  tags: string[]
   score: number
   user_id: string
   brand: string
   model: string
+  tag: string
 }
-
-const DEFAULT_TAGS = ['skinny', 'chunky', 'dressy', 'everyday', 'heater'];
 
 export default function MySneakersPage() {
   const { supabase } = useSupabase()
@@ -32,7 +29,8 @@ export default function MySneakersPage() {
   const [newSneakerModel, setNewSneakerModel] = useState('')
   const [adding, setAdding] = useState(false)
   const [activeTag, setActiveTag] = useState<string | null>(null)
-  const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [tagInput, setTagInput] = useState('')
+  const [availableTags, setAvailableTags] = useState<string[]>([])
 
   useEffect(() => {
     const checkSessionAndFetch = async () => {
@@ -56,7 +54,7 @@ export default function MySneakersPage() {
           (data || []).map((s: any) => ({
             ...s,
             image: s.image || 'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,q_auto:eco/6b2e2e2e-2e2e-4e2e-8e2e-2e2e2e2e2e2e/air-jordan-4-retro-white-oreo.png',
-            tags: s.tags || ['Heater'],
+            tag: s.tag || 'Heater',
             score: s.score || 4,
           }))
         )
@@ -66,11 +64,19 @@ export default function MySneakersPage() {
     checkSessionAndFetch()
   }, [supabase, router])
 
-  const handleTagChange = (tag: string) => {
-    setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
-    )
-  }
+  // Fetch unique tags for filtering
+  useEffect(() => {
+    const fetchTags = async () => {
+      const { data, error } = await supabase
+        .from('sneakers')
+        .select('tag')
+      if (!error && data) {
+        const tags = Array.from(new Set(data.map((s: any) => s.tag).filter(Boolean))) as string[];
+        setAvailableTags(tags);
+      }
+    };
+    fetchTags();
+  }, [sneakers]);
 
   const handleAddSneaker = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -82,11 +88,11 @@ export default function MySneakersPage() {
         brand: newSneakerBrand,
         model: newSneakerModel,
         in_rotation: false,
-        tags: selectedTags,
+        tag: tagInput.trim(),
       })
       setNewSneakerBrand('')
       setNewSneakerModel('')
-      setSelectedTags([])
+      setTagInput('')
       // Refresh sneaker list
       const { data, error } = await supabase
         .from('sneakers')
@@ -97,7 +103,7 @@ export default function MySneakersPage() {
           (data || []).map((s: any) => ({
             ...s,
             image: s.image || 'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,q_auto:eco/6b2e2e2e-2e2e-4e2e-8e2e-2e2e2e2e2e2e/air-jordan-4-retro-white-oreo.png',
-            tags: s.tags || ['Heater'],
+            tag: s.tag || 'Heater',
             score: s.score || 4,
           }))
         )
@@ -112,7 +118,7 @@ export default function MySneakersPage() {
 
   // Filter sneakers locally by tag
   const filteredSneakers = activeTag
-    ? sneakers.filter(s => Array.isArray(s.tags) && s.tags.includes(activeTag))
+    ? sneakers.filter(s => s.tag === activeTag)
     : sneakers;
 
   if (loading) {
@@ -126,7 +132,26 @@ export default function MySneakersPage() {
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
       <h1 className="text-3xl font-bold mb-4">My Sneakers</h1>
       <p>Welcome, {user?.email}!</p>
-      <FilterBar activeTag={activeTag} setActiveTag={setActiveTag} />
+      {/* Inline Filter Bar for tags */}
+      <div className="flex flex-col gap-2 mb-4">
+        <div className="flex gap-2 flex-wrap">
+          <button
+            onClick={() => setActiveTag(null)}
+            className={`px-4 py-1 rounded-full border text-sm ${activeTag === null ? 'bg-black text-white' : 'bg-gray-100 text-gray-700'}`}
+          >
+            All
+          </button>
+          {availableTags.map(tag => (
+            <button
+              key={tag}
+              onClick={() => setActiveTag(tag)}
+              className={`px-4 py-1 rounded-full border text-sm ${activeTag === tag ? 'bg-black text-white' : 'bg-gray-100 text-gray-700'}`}
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+      </div>
       <div className="mt-8 w-full max-w-4xl">
         <h2 className="text-xl font-semibold mb-2">Your Sneakers</h2>
         {filteredSneakers.length === 0 ? (
@@ -138,7 +163,7 @@ export default function MySneakersPage() {
                 <SneakerCard
                   name={sneaker.brand + ' ' + sneaker.model}
                   image={sneaker.image}
-                  tags={sneaker.tags}
+                  tags={[sneaker.tag]}
                   score={sneaker.score}
                 />
               </Link>
@@ -165,19 +190,15 @@ export default function MySneakersPage() {
           disabled={adding}
           required
         />
-        <div className="flex gap-2 flex-wrap items-center">
-          {DEFAULT_TAGS.map(tag => (
-            <label key={tag} className="flex items-center gap-1 text-xs bg-gray-100 px-2 py-1 rounded">
-              <input
-                type="checkbox"
-                checked={selectedTags.includes(tag)}
-                onChange={() => handleTagChange(tag)}
-                disabled={adding}
-              />
-              {tag}
-            </label>
-          ))}
-        </div>
+        <input
+          type="text"
+          placeholder="Tag"
+          value={tagInput}
+          onChange={e => setTagInput(e.target.value)}
+          className="border px-3 py-1 rounded w-40"
+          disabled={adding}
+          required
+        />
         <button
           type="submit"
           className="bg-blue-600 text-white px-4 py-1 rounded disabled:opacity-50"

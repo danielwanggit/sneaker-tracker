@@ -16,12 +16,12 @@ interface Sneaker {
   id: string
   name: string
   image: string
-  tags: string[]
   score: number
   user_id: string
   in_rotation: boolean
   brand: string
   model: string
+  tag: string
 }
 
 export default function MyRotationPage() {
@@ -54,7 +54,7 @@ export default function MyRotationPage() {
           (data || []).map((s: any) => ({
             ...s,
             image: s.image || 'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,q_auto:eco/6b2e2e2e-2e2e-4e2e-8e2e-2e2e2e2e2e2e/air-jordan-4-retro-white-oreo.png',
-            tags: s.tags || ['Heater'],
+            tag: s.tag || 'Heater',
             score: s.score || 4,
             brand: s.brand || 'Unknown',
             model: s.model || 'Unknown',
@@ -88,7 +88,7 @@ export default function MyRotationPage() {
               <SneakerCard
                 name={sneaker.brand + ' ' + sneaker.model}
                 image={sneaker.image}
-                tags={sneaker.tags}
+                tags={[sneaker.tag]}
                 score={sneaker.score}
               />
             </div>
