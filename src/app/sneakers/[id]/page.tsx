@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import { useSupabase } from '@/components/providers/SupabaseProvider'
 import SneakerCard from '@/components/SneakerCard'
+import { updateSneaker } from '@/services/updateSneaker'
 
 interface Sneaker {
   id: string
@@ -56,6 +57,12 @@ export default function SneakerDetailPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params?.id])
 
+  const handleToggleRotation = async () => {
+    if (!sneaker) return;
+    const updated = await updateSneaker(sneaker.id, { in_rotation: !sneaker.in_rotation });
+    setSneaker((prev) => prev && { ...prev, in_rotation: updated.in_rotation });
+  };
+
   if (loading) {
     return <div className="flex min-h-screen items-center justify-center">Loading...</div>
   }
@@ -78,6 +85,12 @@ export default function SneakerDetailPage() {
       <div className="mt-6 text-center">
         <div className="mb-2">In Rotation: {sneaker.in_rotation ? 'Yes' : 'No'}</div>
         <div className="text-xs text-gray-500">Sneaker ID: {sneaker.id}</div>
+        <button
+          onClick={handleToggleRotation}
+          className={`mt-4 px-4 py-2 rounded ${sneaker.in_rotation ? 'bg-green-600 text-white' : 'bg-gray-300 text-black'}`}
+        >
+          {sneaker.in_rotation ? 'Remove from Rotation' : 'Add to Rotation'}
+        </button>
       </div>
     </main>
   )

@@ -78,7 +78,7 @@ export default function MyRotationPage() {
       <h1 className="text-3xl font-bold mb-4">My Rotation</h1>
       <div className="mt-8 w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-8">
         {sneakers.length === 0 ? (
-          <p className="col-span-full">No sneakers in rotation.</p>
+          <p className="col-span-full text-lg text-gray-500 text-center py-12">Add your first sneaker!</p>
         ) : (
           sneakers.map((sneaker, i) => (
             <div key={sneaker.id} className="flex flex-col items-center">
