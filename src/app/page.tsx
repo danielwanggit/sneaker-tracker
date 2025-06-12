@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import SneakerCard from '@/components/SneakerCard'
 
 const TAGS = [
   { label: 'Heater', value: 'heater' },
@@ -72,26 +73,14 @@ export default function Home() {
       <section>
         <h2 className="text-lg font-semibold mb-2">Recently Added</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {DUMMY_SNEAKERS.map((sneaker) => (
-            <div key={sneaker.id} className="bg-white rounded-lg shadow p-4 flex flex-col items-center">
-              <img
-                src={sneaker.image}
-                alt={sneaker.name}
-                className="w-32 h-24 object-contain mb-2"
-                style={{ background: '#f3f3f3' }}
-              />
-              <div className="font-semibold mb-1 text-center">{sneaker.name}</div>
-              <div className="flex flex-wrap gap-1 justify-center">
-                {sneaker.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="bg-gray-200 text-xs px-2 py-0.5 rounded-full text-gray-700"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
+          {DUMMY_SNEAKERS.map((sneaker, i) => (
+            <SneakerCard
+              key={sneaker.id}
+              name={sneaker.name}
+              image={sneaker.image}
+              tags={sneaker.tags}
+              score={(i % 5) + 1} // mock star rating
+            />
           ))}
         </div>
       </section>
