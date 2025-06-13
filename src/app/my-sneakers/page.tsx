@@ -193,39 +193,12 @@ export default function MySneakersPage() {
         )}
       </div>
       <form onSubmit={handleAddSneaker} className="flex gap-2 mb-6 flex-wrap items-end">
-        <input
-          type="text"
-          placeholder="Brand"
-          value={newSneakerBrand}
-          onChange={e => setNewSneakerBrand(e.target.value)}
-          className="border px-3 py-1 rounded w-40"
-          disabled={adding}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Model"
-          value={newSneakerModel}
-          onChange={e => setNewSneakerModel(e.target.value)}
-          className="border px-3 py-1 rounded w-40"
-          disabled={adding}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Tag"
-          value={tagInput}
-          onChange={e => setTagInput(e.target.value)}
-          className="border px-3 py-1 rounded w-40"
-          disabled={adding}
-          required
-        />
         <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-1 rounded disabled:opacity-50"
-          disabled={adding || !newSneakerBrand || !newSneakerModel}
+          type="button"
+          className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
+          onClick={() => router.push('/my-sneakers/add')}
         >
-          {adding ? 'Adding...' : 'Add Sneaker'}
+          Add Sneaker
         </button>
       </form>
     </main>
