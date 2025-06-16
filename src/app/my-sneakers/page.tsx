@@ -177,9 +177,8 @@ export default function MySneakersPage() {
       <div className="mt-8 w-full max-w-4xl">
         <h2 className="text-xl font-semibold mb-2">Your Sneakers</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {filteredSneakers.length === 0 ? (
-            <AddSneakerCard />
-          ) : (
+          {filteredSneakers.length === 0 ? 
+          ( <AddSneakerCard />) : (
             <>
               {filteredSneakers.map((sneaker) => (
                 <Link key={sneaker.id} href={`/sneakers/${sneaker.id}`} className="block hover:shadow-lg transition-shadow">

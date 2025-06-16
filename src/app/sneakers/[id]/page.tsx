@@ -106,19 +106,23 @@ export default function SneakerDetailPage() {
         <div className="flex gap-2 justify-center mt-4">
           <button
             onClick={() => router.push(`/my-sneakers/${sneaker.id}/edit`)}
-            className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+            className="px-4 py-2 rounded bg-gray-100 text-gray-800 hover:bg-gray-200 transition-colors border border-gray-200"
           >
             Edit Sneaker
           </button>
           <button
             onClick={handleToggleRotation}
-            className={`px-4 py-2 rounded ${sneaker.in_rotation ? 'bg-green-600 text-white' : 'bg-gray-300 text-black'}`}
+            className={`px-4 py-2 rounded border ${
+              sneaker.in_rotation 
+                ? 'bg-gray-100 text-gray-800 hover:bg-gray-200' 
+                : 'bg-white text-gray-800 hover:bg-gray-50'
+            } transition-colors border-gray-200`}
           >
             {sneaker.in_rotation ? 'Remove from Rotation' : 'Add to Rotation'}
           </button>
           <button
             onClick={handleDelete}
-            className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700"
+            className="px-4 py-2 rounded bg-red-50 text-red-600 hover:bg-red-100 transition-colors border border-red-200"
           >
             Delete Sneaker
           </button>
