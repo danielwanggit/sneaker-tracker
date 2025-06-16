@@ -10,7 +10,7 @@ interface SneakerCardProps {
 export default function SneakerCard({ name, image, tags, score }: SneakerCardProps) {
   return (
     <div className="bg-white rounded-lg shadow p-4 flex flex-col items-center w-full max-w-xs relative">
-      <span className="absolute top-2 left-2 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full z-10">
+      <span className="absolute top-2 left-2 bg-gray-700 text-white text-xs font-semibold px-3 py-1 rounded-full z-10">
         {score} / 5
       </span>
       <img

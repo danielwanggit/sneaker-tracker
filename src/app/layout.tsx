@@ -26,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 min-h-screen`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-[#fefdf5]`}>
         <SupabaseProvider>
           <NavBar />
           <main className="max-w-4xl mx-auto w-full pt-8">

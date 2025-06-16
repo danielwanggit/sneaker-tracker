@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSupabase } from '@/components/providers/SupabaseProvider'
 import SneakerCard from '@/components/SneakerCard'
+import AddSneakerCard from '@/components/AddSneakerCard'
 import Link from 'next/link'
 import { addSneaker } from '@/services/addSneaker'
 
@@ -11,10 +12,10 @@ interface Sneaker {
   id: string
   name: string
   image: string
-  score: number
+  rating: number
   user_id: string
   brand: string
-  model: string
+  title: string
   tag: string
   in_rotation: boolean
 }
@@ -27,7 +28,7 @@ export default function MySneakersPage() {
   const [sneakers, setSneakers] = useState<Sneaker[]>([])
   const [error, setError] = useState<string | null>(null)
   const [newSneakerBrand, setNewSneakerBrand] = useState('')
-  const [newSneakerModel, setNewSneakerModel] = useState('')
+  const [newSneakerTitle, setNewSneakerTitle] = useState('')
   const [adding, setAdding] = useState(false)
   const [activeTag, setActiveTag] = useState<string | null>(null)
   const [tagInput, setTagInput] = useState('')
@@ -51,13 +52,13 @@ export default function MySneakersPage() {
       if (error) {
         setError(error.message)
       } else {
-        // Fallback for missing fields in DB: mock image, tags, score
+        // Fallback for missing fields in DB: mock image, tags, rating
         setSneakers(
           (data || []).map((s: any) => ({
             ...s,
             image: s.image || 'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,q_auto:eco/6b2e2e2e-2e2e-4e2e-8e2e-2e2e2e2e2e2e/air-jordan-4-retro-white-oreo.png',
             tag: s.tag || 'Heater',
-            score: s.score || 4,
+            rating: s.rating || 0,
             in_rotation: s.in_rotation || false,
           }))
         )
@@ -83,18 +84,18 @@ export default function MySneakersPage() {
 
   const handleAddSneaker = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newSneakerBrand || !newSneakerModel || !user) return
+    if (!newSneakerBrand || !newSneakerTitle || !user) return
     setAdding(true)
     try {
       await addSneaker({
         user_id: user.id,
         brand: newSneakerBrand,
-        model: newSneakerModel,
+        title: newSneakerTitle,
         in_rotation: false,
         tag: tagInput.trim(),
       })
       setNewSneakerBrand('')
-      setNewSneakerModel('')
+      setNewSneakerTitle('')
       setTagInput('')
       // Refresh sneaker list
       const { data, error } = await supabase
@@ -107,7 +108,7 @@ export default function MySneakersPage() {
             ...s,
             image: s.image || 'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,q_auto:eco/6b2e2e2e-2e2e-4e2e-8e2e-2e2e2e2e2e2e/air-jordan-4-retro-white-oreo.png',
             tag: s.tag || 'Heater',
-            score: s.score || 4,
+            rating: s.rating || 0,
             in_rotation: s.in_rotation || false,
           }))
         )
@@ -175,32 +176,26 @@ export default function MySneakersPage() {
       </div>
       <div className="mt-8 w-full max-w-4xl">
         <h2 className="text-xl font-semibold mb-2">Your Sneakers</h2>
-        {filteredSneakers.length === 0 ? (
-          <p className="text-lg text-gray-500 text-center py-12">Add your first sneaker!</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {filteredSneakers.map((sneaker) => (
-              <Link key={sneaker.id} href={`/sneakers/${sneaker.id}`} className="block hover:shadow-lg transition-shadow">
-                <SneakerCard
-                  name={sneaker.brand + ' ' + sneaker.model}
-                  image={sneaker.image}
-                  tags={[sneaker.tag]}
-                  score={sneaker.score}
-                />
-              </Link>
-            ))}
-          </div>
-        )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {filteredSneakers.length === 0 ? (
+            <AddSneakerCard />
+          ) : (
+            <>
+              {filteredSneakers.map((sneaker) => (
+                <Link key={sneaker.id} href={`/sneakers/${sneaker.id}`} className="block hover:shadow-lg transition-shadow">
+                  <SneakerCard
+                    name={sneaker.title}
+                    image={sneaker.image}
+                    tags={[sneaker.tag]}
+                    score={sneaker.rating}
+                  />
+                </Link>
+              ))}
+              <AddSneakerCard />
+            </>
+          )}
+        </div>
       </div>
-      <form onSubmit={handleAddSneaker} className="flex gap-2 mb-6 flex-wrap items-end">
-        <button
-          type="button"
-          className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
-          onClick={() => router.push('/my-sneakers/add')}
-        >
-          Add Sneaker
-        </button>
-      </form>
     </main>
   )
 } 

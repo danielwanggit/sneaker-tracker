@@ -22,7 +22,7 @@ export default function AddSneakerPage() {
   const router = useRouter();
   const { supabase: supa } = useSupabase();
   const [brand, setBrand] = useState("");
-  const [model, setModel] = useState("");
+  const [title, setTitle] = useState("");
   const [tag, setTag] = useState("");
   const [rating, setRating] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -63,9 +63,8 @@ export default function AddSneakerPage() {
   const handleSelectSneaker = (sneaker: SearchResult) => {
     setSelectedSneaker(sneaker);
     setBrand(sneaker.brand || "");
-    setModel(sneaker.model_no || sneaker.nickname || "");
+    setTitle(sneaker.title || sneaker.nickname || "");
     setImageUrl(sneaker.image || "");
-    // You might want to set a default tag based on the sneaker's characteristics
     setTag("");
     setRating("");
   };
@@ -92,7 +91,7 @@ export default function AddSneakerPage() {
       await addSneaker({
         user_id: user.id,
         brand,
-        model,
+        title,
         tag,
         rating: parseFloat(rating),
         image: finalImageUrl,
@@ -109,8 +108,16 @@ export default function AddSneakerPage() {
   if (!user) return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-8">
-      <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg p-6">
+    <main className="flex min-h-screen flex-col items-center p-8 relative">
+      {/* Add back button */}
+      <button
+        onClick={() => router.push('/my-sneakers')}
+        className="absolute top-8 left-8 px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 transition-colors"
+      >
+        ← Back
+      </button>
+
+      <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg p-6 mt-16">
         <h1 className="text-2xl font-bold mb-6">Add Sneaker</h1>
         
         {/* Search Section */}
@@ -183,12 +190,12 @@ export default function AddSneakerPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Model</label>
+              <label className="block text-sm font-medium mb-1">Title</label>
               <input
                 type="text"
-                value={model}
-                onChange={e => setModel(e.target.value)}
-                className="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={title}
+                onChange={e => setTitle(e.target.value)}
                 required
               />
             </div>

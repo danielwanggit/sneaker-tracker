@@ -20,21 +20,19 @@ export default function LoginPage() {
 
     try {
       if (isSignUp) {
-        const { data, error } = await supabase.auth.signUp({
+        const { error } = await supabase.auth.signUp({
           email,
           password,
         })
         if (error) throw error
-        console.log('Sign up successful:', data)
+        router.push('/')
       } else {
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
         })
         if (error) throw error
-        console.log('Sign in successful:', data)
-        console.log('User ID:', data.session?.user.id)
-        router.push('/') // Redirect to home page after successful login
+        router.push('/')
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
@@ -98,14 +96,9 @@ export default function LoginPage() {
             type="submit"
             disabled={loading}
             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? (
-              'Loading...'
-            ) : isSignUp ? (
-              'Sign Up'
-            ) : (
-              'Sign In'
-            )}
+            >
+            {loading ? ('Loading...') : //else goes to signUp?
+            isSignUp ? ('Sign Up') : ('Sign In')}
           </button>
 
           <div className="text-center">
@@ -114,9 +107,8 @@ export default function LoginPage() {
               onClick={() => setIsSignUp(!isSignUp)}
               className="text-sm text-blue-600 hover:text-blue-500"
             >
-              {isSignUp
-                ? 'Already have an account? Sign in'
-                : "Don't have an account? Sign up"}
+              {isSignUp? 'Already have an account? Sign in'
+              : "Don't have an account? Sign up"}
             </button>
           </div>
         </form>

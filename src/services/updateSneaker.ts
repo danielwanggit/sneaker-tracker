@@ -5,8 +5,29 @@ const supabase = createBrowserClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
-export async function updateSneaker(id: string, updates: Partial<any>) {
-  const { data, error } = await supabase.from('sneakers').update(updates).eq('id', id).select().single()
-  if (error) throw error
-  return data
+interface UpdateSneakerData {
+  brand?: string;
+  title?: string;
+  tag?: string;
+  rating?: number;
+  image?: string;
+  in_rotation?: boolean;
+}
+
+export async function updateSneaker(id: string, data: UpdateSneakerData) {
+  const { data: updatedSneaker, error } = await supabase
+    .from('sneakers')
+    .update({
+      ...data,
+
+    })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return updatedSneaker;
 } 

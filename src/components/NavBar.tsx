@@ -25,21 +25,22 @@ export default function NavBar() {
   }
 
   return (
-    <nav className="w-full bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between">
+    <nav className="w-full bg-[#2d2d2d] border-b border-gray-200 px-4 py-2 flex items-center justify-between">
       <div className="flex items-center gap-4">
-        <Link href="/" className="text-lg font-bold">Sneaker Tracker</Link>
-        <Link href="/my-sneakers" className="text-gray-700 hover:text-black">My Sneakers</Link>
+        <Link href="/" className="text-white text-lg font-bold">Sneaker Tracker</Link>
+        <Link href="/my-sneakers" className="text-gray-200 hover:text-white">My Sneakers</Link>
       </div>
       <div>
         {user ? (
           <button
             onClick={handleLogout}
-            className="text-sm bg-gray-100 px-3 py-1 rounded hover:bg-gray-200"
-          >
+            className="text-sm bg-gray-700 text-white px-3 py-1 rounded hover:bg-gray-600">
             Logout
           </button>
         ) : (
-          <Link href="/login" className="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Login</Link>
+          <Link href="/login" className="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
+            Login
+          </Link>
         )}
       </div>
     </nav>

@@ -5,16 +5,17 @@ import { useRouter, useParams } from 'next/navigation'
 import { useSupabase } from '@/components/providers/SupabaseProvider'
 import SneakerCard from '@/components/SneakerCard'
 import { updateSneaker } from '@/services/updateSneaker'
+import { deleteSneaker } from '@/services/deleteSneaker'
 
 interface Sneaker {
   id: string
   name: string
   image: string
-  score: number
+  rating: number
   user_id: string
   in_rotation: boolean
   brand: string
-  model: string
+  title: string
   tag: string
 }
 
@@ -46,9 +47,9 @@ export default function SneakerDetailPage() {
           ...data,
           image: data.image || 'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,q_auto:eco/6b2e2e2e-2e2e-4e2e-8e2e-2e2e2e2e2e2e/air-jordan-4-retro-white-oreo.png',
           tag: data.tag || 'Heater',
-          score: data.score || 4,
+          rating: data.rating || 0,
           brand: data.brand || 'Unknown Brand',
-          model: data.model || 'Unknown Model',
+          title: data.title || 'Unknown Title',
         })
       }
       setLoading(false)
@@ -73,24 +74,55 @@ export default function SneakerDetailPage() {
     return <div className="flex min-h-screen items-center justify-center">Sneaker not found.</div>
   }
 
+  const handleDelete = async () => {
+    if (!sneaker) return;
+    const confirmed = window.confirm('Are you sure you want to delete this sneaker?');
+    if (confirmed) {
+      await deleteSneaker(sneaker.id);
+      router.push('/my-sneakers');
+    }
+  };
+  
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
+    <main className="flex min-h-screen flex-col items-center justify-center p-24 relative">
+      <button
+        onClick={() => router.push('/my-sneakers')}
+        className="absolute top-8 left-8 px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 transition-colors"
+      >
+        ← Back
+      </button>
+
       <h1 className="text-3xl font-bold mb-4">{sneaker.name}</h1>
       <SneakerCard
-        name={sneaker.brand + ' ' + sneaker.model}
+        name={sneaker.title}
         image={sneaker.image}
         tags={[sneaker.tag]}
-        score={sneaker.score}
+        score={sneaker.rating}
       />
       <div className="mt-6 text-center">
         <div className="mb-2">In Rotation: {sneaker.in_rotation ? 'Yes' : 'No'}</div>
         <div className="text-xs text-gray-500">Sneaker ID: {sneaker.id}</div>
-        <button
-          onClick={handleToggleRotation}
-          className={`mt-4 px-4 py-2 rounded ${sneaker.in_rotation ? 'bg-green-600 text-white' : 'bg-gray-300 text-black'}`}
-        >
-          {sneaker.in_rotation ? 'Remove from Rotation' : 'Add to Rotation'}
-        </button>
+        <div className="flex gap-2 justify-center mt-4">
+          <button
+            onClick={() => router.push(`/my-sneakers/${sneaker.id}/edit`)}
+            className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+          >
+            Edit Sneaker
+          </button>
+          <button
+            onClick={handleToggleRotation}
+            className={`px-4 py-2 rounded ${sneaker.in_rotation ? 'bg-green-600 text-white' : 'bg-gray-300 text-black'}`}
+          >
+            {sneaker.in_rotation ? 'Remove from Rotation' : 'Add to Rotation'}
+          </button>
+          <button
+            onClick={handleDelete}
+            className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700"
+          >
+            Delete Sneaker
+          </button>
+        </div>
       </div>
     </main>
   )
