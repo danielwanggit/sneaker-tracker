@@ -6,7 +6,6 @@ import { useSupabase } from '@/components/providers/SupabaseProvider'
 import SneakerCard from '@/components/SneakerCard'
 import AddSneakerCard from '@/components/AddSneakerCard'
 import Link from 'next/link'
-import { addSneaker } from '@/services/addSneaker'
 
 interface Sneaker {
   id: string
@@ -24,14 +23,10 @@ export default function MySneakersPage() {
   const { supabase } = useSupabase()
   const router = useRouter()
   const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<unknown>(null)
   const [sneakers, setSneakers] = useState<Sneaker[]>([])
   const [error, setError] = useState<string | null>(null)
-  const [newSneakerBrand, setNewSneakerBrand] = useState('')
-  const [newSneakerTitle, setNewSneakerTitle] = useState('')
-  const [adding, setAdding] = useState(false)
   const [activeTag, setActiveTag] = useState<string | null>(null)
-  const [tagInput, setTagInput] = useState('')
   const [availableTags, setAvailableTags] = useState<string[]>([])
   const [showRotationOnly, setShowRotationOnly] = useState(false)
   const [profile, setProfile] = useState<{ username: string } | null>(null)
@@ -110,7 +105,7 @@ export default function MySneakersPage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
       <h1 className="text-3xl font-bold mb-4">My Sneakers</h1>
-      <p>Welcome, {profile?.username ?? user?.email}!</p>
+      <p>Welcome, {profile?.username ?? (user && typeof user === 'object' && 'email' in user ? (user as { email: string }).email : '')}!</p>
       {/* Inline Filter Bar for tags */}
       <div className="flex flex-col gap-2 mb-4">
         <div className="flex gap-2 flex-wrap items-center">

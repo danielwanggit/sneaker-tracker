@@ -33,7 +33,6 @@ export default function AddSneakerPage() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [user, setUser] = useState<unknown>(null);
-  const [selectedSneaker, setSelectedSneaker] = useState<SearchResult | null>(null);
 
   // Fetch user on mount
   useEffect(() => {
@@ -61,7 +60,6 @@ export default function AddSneakerPage() {
   };
 
   const handleSelectSneaker = (sneaker: SearchResult) => {
-    setSelectedSneaker(sneaker);
     setBrand(sneaker.brand || "");
     setTitle(sneaker.title || sneaker.nickname || "");
     setImageUrl(sneaker.image || "");
@@ -72,7 +70,7 @@ export default function AddSneakerPage() {
   // Handle image upload to Supabase Storage
   const handleImageUpload = async (file: File) => {
     const filePath = `public/${Date.now()}-${file.name}`;
-    const { data, error } = await supabase.storage.from("sneaker-images").upload(filePath, file);
+    const { error } = await supabase.storage.from("sneaker-images").upload(filePath, file);
     if (error) throw error;
     const { publicUrl } = supabase.storage.from("sneaker-images").getPublicUrl(filePath).data;
     return publicUrl;
@@ -129,7 +127,7 @@ export default function AddSneakerPage() {
               placeholder="Search (e.g. Jordan 1, Nike Dunk)"
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleSearch()}
+              onKeyDown={event => event.key === 'Enter' && handleSearch()}
               className="border px-4 py-2 rounded-lg flex-1 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
             <button 
@@ -149,9 +147,7 @@ export default function AddSneakerPage() {
                 <div
                   key={idx}
                   onClick={() => handleSelectSneaker(result)}
-                  className={`border rounded-lg p-4 cursor-pointer transition-all hover:shadow-md ${
-                    selectedSneaker === result ? 'border-blue-500 ring-2 ring-blue-200' : 'border-gray-200'
-                  }`}
+                  className={`border rounded-lg p-4 cursor-pointer transition-all hover:shadow-md border-gray-200`}
                 >
                   <img
                     src={result.image}
