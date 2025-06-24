@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useSupabase } from "@/components/providers/SupabaseProvider";
 import { updateSneaker } from "@/services/updateSneaker";
-import { supabase } from "@/lib/supabaseClient";
 
 interface SearchResult {
   title: string;
@@ -33,7 +32,7 @@ export default function EditSneakerPage() {
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<unknown>(null);
   const [selectedSneaker, setSelectedSneaker] = useState<SearchResult | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -108,7 +107,7 @@ export default function EditSneakerPage() {
   };
 
   const handleImageUpload = async (file: File): Promise<string> => {
-    if (!user) throw new Error("Not logged in");
+    if (!user || typeof user !== 'object' || !('id' in user)) throw new Error("Not logged in");
     
     const fileExt = file.name.split('.').pop();
     const fileName = `${user.id}/${Date.now()}.${fileExt}`;
@@ -134,8 +133,7 @@ export default function EditSneakerPage() {
       if (imageFile) {
         finalImageUrl = await handleImageUpload(imageFile);
       }
-      if (!user) throw new Error("Not logged in");
-      
+      if (!user || typeof user !== 'object' || !('id' in user)) throw new Error("Not logged in");
       const sneakerId = params?.id as string;
       await updateSneaker(sneakerId, {
         brand,
@@ -144,10 +142,9 @@ export default function EditSneakerPage() {
         rating: parseFloat(rating),
         image: finalImageUrl,
       });
-      
       router.push(`/sneakers/${sneakerId}`);
-    } catch (err: any) {
-      setError(err.message || "Error updating sneaker");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error updating sneaker");
     } finally {
       setSubmitting(false);
     }

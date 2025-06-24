@@ -32,12 +32,12 @@ export default function AddSneakerPage() {
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<unknown>(null);
   const [selectedSneaker, setSelectedSneaker] = useState<SearchResult | null>(null);
 
   // Fetch user on mount
   useEffect(() => {
-    supa.auth.getSession().then((res: any) => {
+    supa.auth.getSession().then((res: { data?: { session?: { user?: unknown } } }) => {
       const session = res.data?.session;
       setUser(session?.user || null);
     });
@@ -87,9 +87,9 @@ export default function AddSneakerPage() {
       if (imageFile) {
         finalImageUrl = await handleImageUpload(imageFile);
       }
-      if (!user) throw new Error("Not logged in");
+      if (!user || typeof user !== 'object' || !('id' in user)) throw new Error("Not logged in");
       await addSneaker({
-        user_id: user.id,
+        user_id: (user as { id: string }).id,
         brand,
         title,
         tag,
@@ -98,8 +98,8 @@ export default function AddSneakerPage() {
         in_rotation: false,
       });
       router.push("/my-sneakers");
-    } catch (err: any) {
-      setError(err.message || "Error adding sneaker");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error adding sneaker");
     } finally {
       setSubmitting(false);
     }
