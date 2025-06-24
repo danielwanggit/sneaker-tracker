@@ -79,7 +79,7 @@ export default function MySneakersPage() {
         .from('sneakers')
         .select('tag')
       if (!error && data) {
-        const tags = Array.from(new Set(data.map((s: any) => s.tag).filter(Boolean))) as string[];
+        const tags = Array.from(new Set(data.map((s: Record<string, unknown>) => s.tag).filter(Boolean))) as string[];
         setAvailableTags(tags);
       }
     };

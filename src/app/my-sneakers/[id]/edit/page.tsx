@@ -33,7 +33,6 @@ export default function EditSneakerPage() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [user, setUser] = useState<unknown>(null);
-  const [selectedSneaker, setSelectedSneaker] = useState<SearchResult | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Fetch user and sneaker data on mount
@@ -98,7 +97,6 @@ export default function EditSneakerPage() {
   };
 
   const handleSelectSneaker = (sneaker: SearchResult) => {
-    setSelectedSneaker(sneaker);
     setBrand(sneaker.brand);
     setTitle(sneaker.title);
     setImageUrl(sneaker.image);

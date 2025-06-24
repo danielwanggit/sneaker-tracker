@@ -52,7 +52,7 @@ export default function AddSneakerPage() {
       const res = await fetch(`/api/kickscrew?query=${encodeURIComponent(searchTerm)}`);
       const data = await res.json();
       setSearchResults(data.products || []);
-    } catch (e) {
+    } catch {
       setError("Error fetching sneaker images");
     } finally {
       setSearching(false);
