@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { useSupabase } from '@/components/providers/SupabaseProvider'
 import SneakerCard from '@/components/SneakerCard'
-import Link from 'next/link'
 
 interface Profile {
   id: string
@@ -75,7 +74,7 @@ export default function UserProfilePage() {
         <div className="w-full max-w-xl">
           <p className="text-lg">Username: <span className="font-semibold">{profile.username}</span></p>
           <p className="text-gray-500 mt-2 mb-6">User ID: {profile.id}</p>
-          <h2 className="text-xl font-semibold mb-2">{profile.username}'s collection</h2>
+          <h2 className="text-xl font-semibold mb-2">{profile.username}&apos;s collection</h2>
           {sneakersLoading && <div>Loading sneakers...</div>}
           {sneakersError && <div className="text-red-500">{sneakersError}</div>}
           {!sneakersLoading && !sneakersError && sneakers.length === 0 && (

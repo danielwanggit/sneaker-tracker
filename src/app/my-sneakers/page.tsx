@@ -63,12 +63,12 @@ export default function MySneakersPage() {
         setError(error.message)
       } else {
         setSneakers(
-          (data || []).map((s: any) => ({
+          (data || []).map((s: Record<string, unknown>) => ({
             ...s,
-            image: s.image || 'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,q_auto:eco/6b2e2e2e-2e2e-4e2e-8e2e-2e2e2e2e2e2e/air-jordan-4-retro-white-oreo.png',
-            tag: s.tag || 'Heater',
-            rating: s.rating || 0,
-            in_rotation: s.in_rotation || false,
+            image: (s.image as string) || 'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,q_auto:eco/6b2e2e2e-2e2e-4e2e-8e2e-2e2e2e2e2e2e/air-jordan-4-retro-white-oreo.png',
+            tag: (s.tag as string) || 'Heater',
+            rating: (s.rating as number) || 0,
+            in_rotation: (s.in_rotation as boolean) || false,
           }))
         )
       }
@@ -90,45 +90,6 @@ export default function MySneakersPage() {
     };
     fetchTags();
   }, [sneakers]);
-
-  const handleAddSneaker = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!newSneakerBrand || !newSneakerTitle || !user) return
-    setAdding(true)
-    try {
-      await addSneaker({
-        user_id: user.id,
-        brand: newSneakerBrand,
-        title: newSneakerTitle,
-        in_rotation: false,
-        tag: tagInput.trim(),
-      })
-      setNewSneakerBrand('')
-      setNewSneakerTitle('')
-      setTagInput('')
-      // Refresh sneaker list
-      const { data, error } = await supabase
-        .from('sneakers')
-        .select('*')
-        .eq('user_id', user.id)
-      if (!error) {
-        setSneakers(
-          (data || []).map((s: any) => ({
-            ...s,
-            image: s.image || 'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,q_auto:eco/6b2e2e2e-2e2e-4e2e-8e2e-2e2e2e2e2e2e/air-jordan-4-retro-white-oreo.png',
-            tag: s.tag || 'Heater',
-            rating: s.rating || 0,
-            in_rotation: s.in_rotation || false,
-          }))
-        )
-      }
-    } catch (err) {
-      console.error('Error adding sneaker:', err)
-      alert('Error adding sneaker: ' + (err && typeof err === 'object' ? JSON.stringify(err) : String(err)))
-    } finally {
-      setAdding(false)
-    }
-  }
 
   // Filter sneakers locally by tag and rotation
   let filteredSneakers = sneakers;

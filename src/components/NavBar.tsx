@@ -9,7 +9,7 @@ export default function NavBar() {
   const { supabase } = useSupabase()
   const router = useRouter()
   const pathname = usePathname()
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<unknown>(null)
 
   useEffect(() => {
     const getSession = async () => {
