@@ -29,6 +29,7 @@ export default function NavBar() {
       <div className="flex items-center gap-4">
         <Link href="/" className="text-white text-lg font-bold">Sneaker Tracker</Link>
         <Link href="/my-sneakers" className="text-gray-200 hover:text-white">My Sneakers</Link>
+        <Link href="/users" className="text-gray-200 hover:text-white">Community</Link>
       </div>
       <div>
         {user ? (

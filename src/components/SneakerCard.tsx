@@ -9,7 +9,7 @@ interface SneakerCardProps {
 
 export default function SneakerCard({ name, image, tags, score }: SneakerCardProps) {
   return (
-    <div className="bg-white rounded-lg shadow p-4 flex flex-col items-center w-full max-w-xs relative">
+    <div className="bg-white rounded-lg shadow p-4 flex flex-col items-center w-full max-w-xs min-h-[300px] flex-grow relative">
       <span className="absolute top-2 left-2 bg-gray-700 text-white text-xs font-semibold px-3 py-1 rounded-full z-10">
         {score} / 5
       </span>
@@ -19,7 +19,7 @@ export default function SneakerCard({ name, image, tags, score }: SneakerCardPro
         onError={e => {
           e.currentTarget.src = "https://static.nike.com/a/images/t_PDP_864_v1/f_auto,q_auto:eco/6b2e2e2e-2e2e-4e2e-8e2e-2e2e2e2e2e2e/air-jordan-4-retro-white-oreo.png";
         }}
-        className="w-32 h-24 object-contain mb-2"
+        className="w-32 h-24 object-contain mb-2 flex-shrink-0 flex-1"
         style={{ background: '#f3f3f3' }}
       />
       <div className="font-semibold mb-1 text-center">{name}</div>

@@ -87,7 +87,7 @@ export default function SneakerDetailPage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24 relative">
       <button
-        onClick={() => router.push('/my-sneakers')}
+        onClick={() => router.back()}
         className="absolute top-8 left-8 px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 transition-colors"
       >
         ← Back
