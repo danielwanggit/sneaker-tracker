@@ -34,6 +34,7 @@ export default function MySneakersPage() {
   const [tagInput, setTagInput] = useState('')
   const [availableTags, setAvailableTags] = useState<string[]>([])
   const [showRotationOnly, setShowRotationOnly] = useState(false)
+  const [profile, setProfile] = useState<{ username: string } | null>(null)
 
   useEffect(() => {
     const checkSessionAndFetch = async () => {
@@ -44,6 +45,15 @@ export default function MySneakersPage() {
         return
       }
       setUser(session.user)
+      // Fetch user profile
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('username')
+        .eq('id', session.user.id)
+        .single()
+      if (!profileError && profileData) {
+        setProfile(profileData)
+      }
       // Fetch sneakers for the current user
       const { data, error } = await supabase
         .from('sneakers')
@@ -52,7 +62,6 @@ export default function MySneakersPage() {
       if (error) {
         setError(error.message)
       } else {
-        // Fallback for missing fields in DB: mock image, tags, rating
         setSneakers(
           (data || []).map((s: any) => ({
             ...s,
@@ -140,7 +149,7 @@ export default function MySneakersPage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
       <h1 className="text-3xl font-bold mb-4">My Sneakers</h1>
-      <p>Welcome, {user?.email}!</p>
+      <p>Welcome, {profile?.username ?? user?.email}!</p>
       {/* Inline Filter Bar for tags */}
       <div className="flex flex-col gap-2 mb-4">
         <div className="flex gap-2 flex-wrap items-center">

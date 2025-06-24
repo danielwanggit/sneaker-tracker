@@ -10,6 +10,7 @@ export default function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
@@ -20,11 +21,19 @@ export default function LoginPage() {
 
     try {
       if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
         })
         if (error) throw error
+        // Insert profile row with username
+        const user = data.user
+        if (user) {
+          const { error: profileError } = await supabase
+            .from('profiles')
+            .insert([{ id: user.id, username }])
+          if (profileError) throw profileError
+        }
         router.push('/')
       } else {
         const { error } = await supabase.auth.signInWithPassword({
@@ -86,6 +95,23 @@ export default function LoginPage() {
                 placeholder="Enter password"
               />
             </div>
+
+            {isSignUp && (
+              <div>
+                <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                  Username
+                </label>
+                <input
+                  id="username"
+                  type="text"
+                  required
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  placeholder="Choose a username"
+                />
+              </div>
+            )}
           </div>
 
           {error && (
