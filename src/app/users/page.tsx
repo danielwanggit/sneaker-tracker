@@ -14,25 +14,11 @@ export default function UsersPage() {
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
 
   useEffect(() => {
-    const checkAuthAndFetchProfiles = async () => {
+    const fetchProfiles = async () => {
       try {
-        // First check if user is authenticated
-        const { data: { session } } = await supabase.auth.getSession()
-        const authenticated = !!session
-        setIsAuthenticated(authenticated)
-        console.log('Authentication status:', authenticated)
-
-        // If not authenticated, show login message immediately
-        if (!authenticated) {
-          setError('Please log in to view the community directory.')
-          setLoading(false)
-          return
-        }
-
-        // Try to fetch profiles only if authenticated
+        // Fetch profiles - should work for both authenticated and unauthenticated users
         const { data, error } = await supabase
           .from('profiles')
           .select('id, username')
@@ -45,14 +31,14 @@ export default function UsersPage() {
           setProfiles(data || [])
         }
       } catch (err) {
-        console.error('Error in checkAuthAndFetchProfiles:', err)
+        console.error('Error fetching profiles:', err)
         setError('Failed to load user directory. Please try again.')
       } finally {
         setLoading(false)
       }
     }
     
-    checkAuthAndFetchProfiles()
+    fetchProfiles()
   }, [supabase])
 
   return (
@@ -65,14 +51,6 @@ export default function UsersPage() {
         {error && (
           <div className="text-center">
             <div className="text-red-500 mb-4">{error}</div>
-            {!isAuthenticated && (
-              <Link 
-                href="/login" 
-                className="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
-              >
-                Log in to view community
-              </Link>
-            )}
           </div>
         )}
         
@@ -94,7 +72,7 @@ export default function UsersPage() {
           </div>
         )}
         
-        {!loading && !error && profiles.length === 0 && isAuthenticated && (
+        {!loading && !error && profiles.length === 0 && (
           <div className="text-center">
             <p className="text-gray-500 mb-4">No users found in the community yet.</p>
             <p className="text-sm text-gray-400">Be the first to join!</p>
