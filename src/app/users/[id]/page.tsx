@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { useSupabase } from '@/components/providers/SupabaseProvider'
 import SneakerCard from '@/components/SneakerCard'
+import Link from 'next/link'
 
 interface Profile {
   id: string
@@ -28,21 +29,37 @@ export default function UserProfilePage() {
   const [sneakers, setSneakers] = useState<Sneaker[]>([]);
   const [sneakersLoading, setSneakersLoading] = useState(true);
   const [sneakersError, setSneakersError] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (!userId) return;
     const fetchProfile = async () => {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('id, username')
-        .eq('id', userId)
-        .single();
-      if (error) {
-        setError(error.message);
-      } else {
-        setProfile(data);
+      try {
+        // Check authentication status
+        const { data: { session } } = await supabase.auth.getSession()
+        setIsAuthenticated(!!session)
+
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('id, username')
+          .eq('id', userId)
+          .single();
+        
+        if (error) {
+          // Handle authentication errors specifically
+          if (error.message.includes('JWT') || error.message.includes('auth') || error.message.includes('permission')) {
+            setError('Please log in to view user profiles.');
+          } else {
+            setError(error.message);
+          }
+        } else {
+          setProfile(data);
+        }
+      } catch (err) {
+        setError('Failed to load user profile. Please try again.');
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
     fetchProfile();
   }, [supabase, userId]);
@@ -51,35 +68,78 @@ export default function UserProfilePage() {
     if (!userId) return;
     const fetchSneakers = async () => {
       setSneakersLoading(true);
-      const { data, error } = await supabase
-        .from('sneakers')
-        .select('id, title, image, tag, rating')
-        .eq('user_id', userId);
-      if (error) {
-        setSneakersError(error.message);
-      } else {
-        setSneakers(data || []);
+      try {
+        const { data, error } = await supabase
+          .from('sneakers')
+          .select('id, title, image, tag, rating')
+          .eq('user_id', userId);
+        
+        if (error) {
+          // Handle authentication errors for sneakers
+          if (error.message.includes('JWT') || error.message.includes('auth') || error.message.includes('permission')) {
+            setSneakersError('Please log in to view sneaker collections.');
+          } else {
+            setSneakersError(error.message);
+          }
+        } else {
+          setSneakers(data || []);
+        }
+      } catch (err) {
+        setSneakersError('Failed to load sneaker collection.');
+      } finally {
+        setSneakersLoading(false);
       }
-      setSneakersLoading(false);
     };
     fetchSneakers();
   }, [supabase, userId]);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-2xl font-bold mb-4">User Profile</h1>
-      {loading && <div>Loading...</div>}
-      {error && <div className="text-red-500">{error}</div>}
+      <div className="w-full max-w-xl">
+        <h1 className="text-2xl font-bold mb-6 text-center">User Profile</h1>
+        
+        {loading && <div>Loading...</div>}
+      
+      {error && (
+        <div className="text-center">
+          <div className="text-red-500 mb-4">{error}</div>
+          {!isAuthenticated && (
+            <Link 
+              href="/login" 
+              className="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+            >
+              Log in to view profiles
+            </Link>
+          )}
+        </div>
+      )}
+      
       {!loading && !error && profile && (
-        <div className="w-full max-w-xl">
+        <div>
           <p className="text-lg">Username: <span className="font-semibold">{profile.username}</span></p>
           <p className="text-gray-500 mt-2 mb-6">User ID: {profile.id}</p>
           <h2 className="text-xl font-semibold mb-2">{profile.username}&apos;s collection</h2>
+          
           {sneakersLoading && <div>Loading sneakers...</div>}
-          {sneakersError && <div className="text-red-500">{sneakersError}</div>}
+          
+          {sneakersError && (
+            <div className="text-center">
+              <div className="text-red-500 mb-4">{sneakersError}</div>
+              {!isAuthenticated && (
+                <Link 
+                  href="/login" 
+                  className="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+                >
+                  Log in to view collection
+                </Link>
+              )}
+            </div>
+          )}
+          
           {!sneakersLoading && !sneakersError && sneakers.length === 0 && (
             <div className="text-gray-500">No sneakers found.</div>
           )}
+          
           {!sneakersLoading && !sneakersError && sneakers.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
               {sneakers.map(sneaker => (
@@ -96,9 +156,19 @@ export default function UserProfilePage() {
           )}
         </div>
       )}
+      
       {!loading && !error && !profile && (
-        <div className="text-gray-500">User not found.</div>
+        <div className="text-center">
+          <div className="text-gray-500 mb-4">User not found.</div>
+          <Link 
+            href="/users" 
+            className="inline-block bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition-colors"
+          >
+            Back to Community
+          </Link>
+        </div>
       )}
+      </div>
     </main>
   )
 } 
