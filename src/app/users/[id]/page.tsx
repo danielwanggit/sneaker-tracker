@@ -45,7 +45,7 @@ export default function UserProfilePage() {
         } else {
           setProfile(data);
         }
-      } catch (err) {
+      } catch {
         setError('Failed to load user profile. Please try again.');
       } finally {
         setLoading(false);
@@ -69,7 +69,7 @@ export default function UserProfilePage() {
         } else {
           setSneakers(data || []);
         }
-      } catch (err) {
+      } catch {
         setSneakersError('Failed to load sneaker collection.');
       } finally {
         setSneakersLoading(false);
