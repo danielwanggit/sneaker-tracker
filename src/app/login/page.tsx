@@ -13,7 +13,6 @@ export default function LoginPage() {
   const [username, setUsername] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-  const [showVerifyMessage, setShowVerifyMessage] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -27,10 +26,15 @@ export default function LoginPage() {
           password,
         })
         if (error) throw error
-        // Show verify message and do not attempt to log in or insert profile
-        setShowVerifyMessage(true)
-        setLoading(false)
-        return
+        // Insert profile row with username
+        const user = data.user
+        if (user) {
+          const { error: profileError } = await supabase
+            .from('profiles')
+            .insert([{ id: user.id, username }])
+          if (profileError) throw profileError
+        }
+        router.push('/')
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email,
@@ -61,12 +65,6 @@ export default function LoginPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-          {/* Show verification message after signup */}
-          {showVerifyMessage && (
-            <div className="text-green-600 text-center mb-4">
-              Please check your email to verify your account before logging in.
-            </div>
-          )}
           <div className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
