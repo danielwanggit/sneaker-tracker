@@ -44,7 +44,8 @@ export default function LoginPage() {
         router.push('/')
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      setError(err instanceof Error ? err.message : JSON.stringify(err))
+      console.error('Signup error:', err)
     } finally {
       setLoading(false)
     }
