@@ -11,3 +11,5 @@ Sneaker Tracker is a  web app that allows users to catalog, rate, and share thei
 - **Rotation Tracking**: Mark sneakers as "in rotation" for quick access.
 - **Community Directory**: Browse other users and view their public sneaker collections.
 - **Responsive UI**: Clean, mobile-friendly design with Tailwind CSS.
+
+This is a Next.js project bootstrapped with create-next-app.
