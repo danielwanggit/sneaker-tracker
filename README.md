@@ -1,4 +1,4 @@
-# Sneaker Tracker
+# Sneaker Tracker(https://sneaker-tracker-ten.vercel.app)
 
 Sneaker Tracker is a  web app that allows users to catalog, rate, and share their sneaker collections. Built with Next.js, React, Supabase, and Tailwind CSS, it offers a social experience for discovering and showcasing sneaker collections.
 
@@ -18,7 +18,7 @@ After creating an account, users have access to the following features
 ### My Sneakers Dashboard
 
 ### My Collection
-<img width="1230" height="732" alt="Screenshot 2025-08-04 at 11 18 59 AM" src="https://github.com/user-attachments/assets/b42b5418-d6b9-4e60-8eab-8803ff61e5cc" />
+<img width="1234" height="771" alt="Screenshot 2025-08-04 at 11 18 39 AM" src="https://github.com/user-attachments/assets/7fd300ab-0a96-4d86-a3e2-aec39bcad04a" />
 *Personal sneaker collection with rating, tags, and rotation status*
 
 ### Add New Sneaker
