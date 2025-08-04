@@ -23,7 +23,7 @@ After creating an account, users have access to the following features
 ### Add New Sneaker
 <img width="903" height="682" alt="Screenshot 2025-08-04 at 11 53 56 AM" src="https://github.com/user-attachments/assets/99c212d2-f94b-4452-a996-6314b1249aef" />
 <img width="1230" height="732" alt="Screenshot 2025-08-04 at 11 18 59 AM" src="https://github.com/user-attachments/assets/2d1c73d0-31ff-47c9-af02-e3ac149c1b70" />
-*Form to add new sneakers with image search and upload functionality. Note: Currently do not have access to unlimited requests the API, so you may have to add manually*
+*Form to add new sneakers with image search and upload functionality. Note: Currently do not have access to unlimited API requests, so you may have to add manually*
 
 ### Community Directory
 <img width="1235" height="610" alt="Screenshot 2025-08-04 at 11 19 23 AM" src="https://github.com/user-attachments/assets/758978ea-e41a-42b1-9e4d-adbbc0510c69" />
