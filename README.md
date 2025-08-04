@@ -15,7 +15,6 @@ Sneaker Tracker is a  web app that allows users to catalog, rate, and share thei
 ## Demo
 
 After creating an account, users have access to the following features
-### My Sneakers Dashboard
 
 ### My Collection
 <img width="1234" height="771" alt="Screenshot 2025-08-04 at 11 18 39 AM" src="https://github.com/user-attachments/assets/7fd300ab-0a96-4d86-a3e2-aec39bcad04a" />
